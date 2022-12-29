@@ -1,9 +1,9 @@
 #include <WiFi.h>
-#include <WebServer.h>
 
 #include "config.h"
+#include "camera.h"
 
-WebServer httpd(80);
+static camera cam;
 
 /* handle incoming connections */
 auto on_connection(void) -> void {
@@ -18,17 +18,15 @@ auto setup() -> void {
   com_ard.begin(9600, SERIAL_8N1, RXD2, TXD2);
 
   // setup wifi network
+  WiFi.setTxPower(WIFI_POWER_19_5dBm);
+  WiFi.mode(WIFI_AP);
   WiFi.softAP(ssid, pswd);
   WiFi.softAPConfig(local_ip, gateway, subnet);
-  delay(100);
 
-  // add routes and begin serving
-  httpd.on("/", on_connection);
-  httpd.begin();
+  // startup server
+  cam.start_server();
 }
 
 
 /* main loop */
-auto loop() -> void {
-  httpd.handleClient();
-}
+auto loop() -> void {}
