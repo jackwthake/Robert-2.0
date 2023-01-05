@@ -5,8 +5,7 @@
 
 class camera {
 public:
-  camera(void);
-  start_server();
+  void start_server();
 private:
   void camera_setup();
   void server_startup();

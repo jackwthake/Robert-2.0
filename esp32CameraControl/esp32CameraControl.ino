@@ -5,12 +5,6 @@
 
 static camera cam;
 
-/* handle incoming connections */
-auto on_connection(void) -> void {
-  httpd.send(200, "text/html", "hello world!");
-}
-
-
 /* startup */
 auto setup() -> void {
   // setup COMs
