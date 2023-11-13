@@ -1,9 +1,12 @@
-auto setup() -> void {
-  Serial.begin(9600);
+#include "TB6612.h"
+
+auto setup(void) -> void {
+  tb6612_init_driver();
 }
 
-auto loop() -> void {
-  if (Serial.available() > 0) {
-    Serial.println((int8_t)Serial.read());
-  }
+auto loop(void) -> void {
+  tb6612_send_command(STBY_enable | AIN_enable, 0, 0); 
+  delay(1000);
+  tb6612_send_command(STBY_enable | BIN_enable, 0, 100);
+  delay(1000);
 }
