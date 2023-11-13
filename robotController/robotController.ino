@@ -1,8 +1,12 @@
-#include "TB6612.h"
+#include "motor_driver.h"
+#include "ultrasonic_driver.h"
 
 auto setup(void) -> void {
+  Serial.begin(9600);
+
   tb6612_init_driver();
   servo_init();
+  ultrasonic_init();
 }
 
 auto loop(void) -> void {
@@ -17,5 +21,7 @@ auto loop(void) -> void {
   delay(1000);
   tb6612_send_command(0x00, 0, 0);
 
-  for(;;) {}
+  for (;;) {
+    Serial.println(ultrasonic_get());
+  }
 }
