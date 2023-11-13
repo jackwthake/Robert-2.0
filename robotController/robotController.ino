@@ -2,7 +2,9 @@
 #include "ultrasonic_driver.h"
 
 auto setup(void) -> void {
-  Serial.begin(9600);
+  if (Serial) {
+    Serial.begin(9600);
+  }
 
   tb6612_init_driver();
   servo_init();
@@ -10,18 +12,21 @@ auto setup(void) -> void {
 }
 
 auto loop(void) -> void {
-  tb6612_send_command(STBY_enable | AIN_enable, 100, 0); 
-  delay(1000);
+  if (Serial.available() > 0) {
+    int motor_a, motor_b, a_spd, b_spd, servo_pos;
 
-  for (int i = 0; i < 180; ++i) {
-    servo_send_command(i);
-  }
+    motor_a = Serial.parseInt();
+    motor_b = Serial.parseInt();
+    a_spd = Serial.parseInt();
+    b_spd = Serial.parseInt();
+    servo_pos = Serial.parseInt();
 
-  tb6612_send_command(STBY_enable | BIN_enable, 0, 100);
-  delay(1000);
-  tb6612_send_command(0x00, 0, 0);
+    uint8_t mask = STBY_enable;
 
-  for (;;) {
-    Serial.println(ultrasonic_get());
+    if (motor_a) mask | AIN_enable;
+    if (motor_b) mask | BIN_enable;
+
+    tb6612_send_command(mask, a_spd, b_spd);
+    servo_send_command(servo_pos);
   }
 }
