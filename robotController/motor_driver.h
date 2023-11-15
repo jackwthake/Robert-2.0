@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+/* Driver Code For TB6612 Motor Controller*/
 enum tb6612_motor_mask {
   AIN_enable = 0b00000001,
   BIN_enable = 0b00000010,
